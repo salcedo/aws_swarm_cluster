@@ -10,6 +10,11 @@ resource "aws_instance" "worker" {
   instance_type = var.instance_type
   key_name      = var.key_name
 
+  metadata_options {
+    http_tokens            = "required"
+    instance_metadata_tags = "enabled"
+  }
+
   root_block_device {
     encrypted = true
     tags = merge(var.tags, {
@@ -22,10 +27,8 @@ resource "aws_instance" "worker" {
   subnet_id = var.subnet_map[var.availability_zones[count.index % length(var.availability_zones)]]
 
   tags = merge(var.tags, {
-    Name       = "${var.cluster_name}-${var.environment}-wkr-${var.name}-${var.availability_zones[count.index % length(var.availability_zones)]}-${count.index + 1}"
-    WorkerPool = var.name
+    Name = "${var.cluster_name}-${var.environment}-wkr-${var.name}-${var.availability_zones[count.index % length(var.availability_zones)]}-${count.index + 1}"
   })
-
 
   user_data = <<-EOF
               #!/bin/bash

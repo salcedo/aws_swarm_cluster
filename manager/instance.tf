@@ -10,6 +10,11 @@ resource "aws_instance" "manager" {
   instance_type = var.instance_type
   key_name      = var.key_name
 
+  metadata_options {
+    http_tokens            = "required"
+    instance_metadata_tags = "enabled"
+  }
+
   root_block_device {
     encrypted = true
     tags = merge(var.tags, {
