@@ -26,5 +26,16 @@ resource "aws_instance" "worker" {
     WorkerPool = var.name
   })
 
+
+  user_data = <<-EOF
+              #!/bin/bash
+              HOSTNAME="${var.cluster_name}-${var.environment}-wkr-${var.name}-${var.availability_zones[count.index % length(var.availability_zones)]}-${count.index + 1}"
+
+              echo "$HOSTNAME" > /etc/hostname
+              hostnamectl set-hostname "$HOSTNAME"
+              echo "127.0.0.1 $HOSTNAME" >> /etc/hosts
+              ${var.user_data}
+              EOF
+
   vpc_security_group_ids = var.vpc_security_group_ids
 }

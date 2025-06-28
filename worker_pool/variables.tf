@@ -69,8 +69,8 @@ variable "worker_count" {
   default     = 1
 
   validation {
-    condition     = contains([1, 3, 5, 7], var.worker_count)
-    error_message = "Count must be 1, 3, 5, or 7 for Docker Swarm raft consensus requirements."
+    condition     = var.worker_count >= 0 && var.worker_count <= 1000
+    error_message = "Worker count must be between 0 and 1000. Worker nodes don't participate in raft consensus and can be any reasonable number."
   }
 }
 
@@ -87,7 +87,6 @@ variable "ami" {
 variable "associate_public_ip_address" {
   description = "Whether to associate a public IP address with an instance in a VPC"
   type        = bool
-  default     = false
 }
 
 variable "availability_zones" {
@@ -110,13 +109,11 @@ variable "availability_zones" {
 variable "disable_api_stop" {
   description = "If true, enables EC2 Instance Stop Protection"
   type        = bool
-  default     = true
 }
 
 variable "disable_api_termination" {
   description = "If true, enables EC2 Instance Termination Protection"
   type        = bool
-  default     = true
 }
 
 variable "instance_type" {
@@ -159,6 +156,11 @@ variable "root_volume_size" {
 variable "tags" {
   description = "Map of tags to assign to the worker instance(s)"
   type        = map(any)
+}
+
+variable "user_data" {
+  description = "User data to provide when launching the instance"
+  type        = string
 }
 
 variable "vpc_security_group_ids" {

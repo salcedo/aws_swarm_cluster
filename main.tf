@@ -28,14 +28,15 @@ module "manager" {
   manager_count = var.manager_pool.manager_count
 
   ami                         = var.manager_pool.ami
-  associate_public_ip_address = var.manager_pool.associate_public_ip_address
+  associate_public_ip_address = var.manager_pool.associate_public_ip_address != null ? var.manager_pool.associate_public_ip_address : false
   availability_zones          = var.manager_pool.availability_zones
-  disable_api_stop            = var.manager_pool.disable_api_stop
-  disable_api_termination     = var.manager_pool.disable_api_termination
+  disable_api_stop            = var.manager_pool.disable_api_stop != null ? var.manager_pool.disable_api_stop : true
+  disable_api_termination     = var.manager_pool.disable_api_termination != null ? var.manager_pool.disable_api_termination : true
   instance_type               = var.manager_pool.instance_type
   key_name                    = var.manager_pool.key_name
   root_volume_size            = var.manager_pool.root_volume_size
-  tags                        = var.manager_pool.tags
+  tags                        = var.manager_pool != null ? var.manager_pool.tags : {}
+  user_data                   = var.manager_pool.user_data != null ? var.manager_pool.user_data : ""
   vpc_security_group_ids      = var.manager_pool.vpc_security_group_ids
 }
 
@@ -52,13 +53,14 @@ module "worker_pools" {
 
   name                        = each.value.name
   ami                         = each.value.ami
-  associate_public_ip_address = each.value.associate_public_ip_address
+  associate_public_ip_address = each.value.associate_public_ip_address != null ? each.value.associate_public_ip_address : false
   availability_zones          = each.value.availability_zones
-  disable_api_stop            = each.value.disable_api_stop
-  disable_api_termination     = each.value.disable_api_termination
+  disable_api_stop            = each.value.disable_api_stop != null ? each.value.disable_api_stop : false
+  disable_api_termination     = each.value.disable_api_termination != null ? each.value.disable_api_termination : false
   instance_type               = each.value.instance_type
   key_name                    = each.value.key_name
   root_volume_size            = each.value.root_volume_size
-  tags                        = each.value.tags
+  tags                        = each.value.tags != null ? each.value.tags : {}
+  user_data                   = var.manager_pool.user_data != null ? var.manager_pool.user_data : ""
   vpc_security_group_ids      = each.value.vpc_security_group_ids
 }

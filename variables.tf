@@ -26,14 +26,15 @@ variable "manager_pool" {
   type = object({
     manager_count               = number
     ami                         = string
-    associate_public_ip_address = bool
+    associate_public_ip_address = optional(bool)
     availability_zones          = list(string)
-    disable_api_stop            = bool
-    disable_api_termination     = bool
+    disable_api_stop            = optional(bool)
+    disable_api_termination     = optional(bool)
     instance_type               = string
     key_name                    = string
     root_volume_size            = number
-    tags                        = map(any)
+    tags                        = optional(map(any))
+    user_data                   = optional(string)
     vpc_security_group_ids      = list(string)
   })
   default = {
@@ -47,6 +48,7 @@ variable "manager_pool" {
     key_name                    = ""
     root_volume_size            = 30
     tags                        = {}
+    user_data                   = ""
     vpc_security_group_ids      = []
   }
 }
@@ -57,14 +59,15 @@ variable "worker_pools" {
     name                        = string
     worker_count                = number
     ami                         = string
-    associate_public_ip_address = bool
+    associate_public_ip_address = optional(bool)
     availability_zones          = list(string)
-    disable_api_stop            = bool
-    disable_api_termination     = bool
+    disable_api_stop            = optional(bool)
+    disable_api_termination     = optional(bool)
     instance_type               = string
     key_name                    = string
     root_volume_size            = number
-    tags                        = map(any)
+    tags                        = optional(map(any))
+    user_data                   = optional(string)
     vpc_security_group_ids      = list(string)
   }))
   default = {
@@ -80,6 +83,7 @@ variable "worker_pools" {
       key_name                    = ""
       root_volume_size            = 30
       tags                        = {}
+      user_data                   = ""
       vpc_security_group_ids      = []
     }
   }

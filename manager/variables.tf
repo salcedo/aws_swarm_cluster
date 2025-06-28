@@ -70,7 +70,6 @@ variable "ami" {
 variable "associate_public_ip_address" {
   description = "Whether to associate a public IP address with an instance in a VPC"
   type        = bool
-  default     = false
 }
 
 variable "availability_zones" {
@@ -93,13 +92,11 @@ variable "availability_zones" {
 variable "disable_api_stop" {
   description = "If true, enables EC2 Instance Stop Protection"
   type        = bool
-  default     = true
 }
 
 variable "disable_api_termination" {
   description = "If true, enables EC2 Instance Termination Protection"
   type        = bool
-  default     = true
 }
 
 variable "instance_type" {
@@ -142,6 +139,11 @@ variable "root_volume_size" {
 variable "tags" {
   description = "Map of tags to assign to the manager instance(s)"
   type        = map(any)
+}
+
+variable "user_data" {
+  description = "User data to provide when launching the instance"
+  type        = string
 }
 
 variable "vpc_security_group_ids" {
