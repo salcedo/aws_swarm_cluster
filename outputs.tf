@@ -19,19 +19,23 @@ output "ansible_inventory_yaml" {
         managers = {
           hosts = {
             for idx, instance in module.manager.instances : instance.tags.Name => {
-              ansible_host = instance.public_ip != "" ? instance.public_ip : instance.private_ip
-              private_ip   = instance.private_ip
-              public_ip    = instance.public_ip
+              ansible_host            = instance.public_ip != "" ? instance.public_ip : instance.private_ip
+              ansible_user            = "admin"
+              ansible_ssh_common_args = "-o StrictHostKeyChecking=no"
+              private_ip              = instance.private_ip
+              public_ip               = instance.public_ip
             }
           }
         }
         workers = {
           hosts = {
             for worker in local.all_workers : worker.name => {
-              ansible_host = worker.public_ip != "" ? worker.public_ip : worker.private_ip
-              private_ip   = worker.private_ip
-              public_ip    = worker.public_ip
-              worker_pool  = worker.pool_name
+              ansible_host            = worker.public_ip != "" ? worker.public_ip : worker.private_ip
+              ansible_user            = "admin"
+              ansible_ssh_common_args = "-o StrictHostKeyChecking=no"
+              private_ip              = worker.private_ip
+              public_ip               = worker.public_ip
+              worker_pool             = worker.pool_name
             }
           }
         }

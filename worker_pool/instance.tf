@@ -18,7 +18,7 @@ resource "aws_instance" "worker" {
   root_block_device {
     encrypted = true
     tags = merge(var.tags, {
-      Instance = "${var.cluster_name}-${var.environment}-wkr-${var.name}-${var.availability_zones[count.index % length(var.availability_zones)]}-${count.index + 1}"
+      Instance = "${var.cluster_name}-${var.environment}-wkr-${var.name}-${var.availability_zones[count.index % length(var.availability_zones)]}${count.index + 1}"
     })
     volume_size = var.root_volume_size
     volume_type = "gp3"
@@ -27,12 +27,12 @@ resource "aws_instance" "worker" {
   subnet_id = var.subnet_map[var.availability_zones[count.index % length(var.availability_zones)]]
 
   tags = merge(var.tags, {
-    Name = "${var.cluster_name}-${var.environment}-wkr-${var.name}-${var.availability_zones[count.index % length(var.availability_zones)]}-${count.index + 1}"
+    Name = "${var.cluster_name}-${var.environment}-wkr-${var.name}-${var.availability_zones[count.index % length(var.availability_zones)]}${count.index + 1}"
   })
 
   user_data = <<-EOF
               #!/bin/bash
-              HOSTNAME="${var.cluster_name}-${var.environment}-wkr-${var.name}-${var.availability_zones[count.index % length(var.availability_zones)]}-${count.index + 1}"
+              HOSTNAME="${var.cluster_name}-${var.environment}-wkr-${var.name}-${var.availability_zones[count.index % length(var.availability_zones)]}${count.index + 1}"
 
               echo "$HOSTNAME" > /etc/hostname
               hostnamectl set-hostname "$HOSTNAME"
