@@ -11,8 +11,7 @@ resource "aws_instance" "worker" {
   key_name      = var.key_name
 
   metadata_options {
-    http_tokens            = "required"
-    instance_metadata_tags = "enabled"
+    http_tokens = "required"
   }
 
   root_block_device {
