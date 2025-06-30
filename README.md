@@ -75,7 +75,7 @@ module "swarm_cluster" {
 
 ```hcl
 module "swarm_cluster" {
-  source = "./aws_swarm_cluster"
+  source = "github.com/salcedo/aws_swarm_cluster"
 
   cluster_name = "production-swarm"
   environment  = "prod"
@@ -269,71 +269,6 @@ Examples:
   - TCP 2377 (cluster management)
   - TCP/UDP 7946 (node communication)
   - UDP 4789 (overlay network traffic)
-
-## Examples
-
-### Minimal Setup
-
-```hcl
-module "dev_swarm" {
-  source = "./aws_swarm_cluster"
-
-  vpc_id = "vpc-12345678"
-
-  manager_pool = {
-    ami      = "ami-0c02fb55956c7d316"
-    key_name = "dev-key"
-    vpc_security_group_ids = ["sg-12345678"]
-  }
-}
-```
-
-### Production Setup
-
-```hcl
-module "prod_swarm" {
-  source = "./aws_swarm_cluster"
-
-  cluster_name = "production"
-  environment  = "prod"
-  vpc_id       = "vpc-87654321"
-
-  manager_pool = {
-    manager_count          = 3
-    ami                   = "ami-0c02fb55956c7d316"
-    instance_type         = "t3a.medium"
-    key_name             = "prod-key"
-    availability_zones   = ["a", "b", "c"]
-    vpc_security_group_ids = ["sg-managers"]
-    root_volume_size     = 100
-    disable_api_stop     = true
-    disable_api_termination = true
-  }
-
-  worker_pools = {
-    "frontend" = {
-      name           = "frontend"
-      worker_count   = 3
-      ami           = "ami-0c02fb55956c7d316"
-      instance_type = "t3a.large"
-      key_name      = "prod-key"
-      availability_zones = ["a", "b", "c"]
-      vpc_security_group_ids = ["sg-frontend"]
-      root_volume_size = 50
-    }
-    "backend" = {
-      name           = "backend"
-      worker_count   = 2
-      ami           = "ami-0c02fb55956c7d316"
-      instance_type = "c5.xlarge"
-      key_name      = "prod-key"
-      availability_zones = ["a", "b"]
-      vpc_security_group_ids = ["sg-backend"]
-      root_volume_size = 200
-    }
-  }
-}
-```
 
 ## Troubleshooting
 
