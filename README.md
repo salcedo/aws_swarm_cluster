@@ -155,13 +155,14 @@ module "swarm_cluster" {
 
 ### Optional Variables
 
-| Name           | Description                                      | Type          | Default       |
-| -------------- | ------------------------------------------------ | ------------- | ------------- |
-| `cluster_name` | The name of this cluster                         | `string`      | `"swarm"`     |
-| `environment`  | The name of the environment this cluster targets | `string`      | `"dev"`       |
-| `region`       | Region where this cluster will be managed        | `string`      | `"us-east-1"` |
-| `manager_pool` | Manager pool configuration                       | `object`      | See below     |
-| `worker_pools` | Map of worker pools to create                    | `map(object)` | See below     |
+| Name                          | Description                                             | Type          | Default       |
+| ----------------------------- | ------------------------------------------------------- | ------------- | ------------- |
+| `cluster_name`                | The name of this cluster                                | `string`      | `"swarm"`     |
+| `environment`                 | The name of the environment this cluster targets        | `string`      | `"dev"`       |
+| `region`                      | Region where this cluster will be managed               | `string`      | `"us-east-1"` |
+| `ansible_host_use_private_ip` | Use private IP addresses for Ansible host configuration | `bool`        | `true`        |
+| `manager_pool`                | Manager pool configuration                              | `object`      | See below     |
+| `worker_pools`                | Map of worker pools to create                           | `map(object)` | See below     |
 
 ### Manager Pool Configuration
 
@@ -208,18 +209,39 @@ all:
     managers:
       hosts:
         swarm-prod-mgr-a1:
-          ansible_host: "1.2.3.4"
+          ansible_host: "10.0.1.10"
           ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
           private_ip: "10.0.1.10"
           public_ip: "1.2.3.4"
     workers:
       hosts:
         swarm-prod-wkr-web-a1:
-          ansible_host: "1.2.3.5"
+          ansible_host: "10.0.1.11"
           ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
           private_ip: "10.0.1.11"
           public_ip: "1.2.3.5"
           worker_pool: "web"
+```
+
+#### Ansible Host IP Selection
+
+The `ansible_host` field in the inventory is controlled by the `ansible_host_use_private_ip` variable:
+
+- **When `ansible_host_use_private_ip = true` (default)**: The `ansible_host` field uses the private IP address for all instances
+- **When `ansible_host_use_private_ip = false`**: The `ansible_host` field uses the public IP address if available, otherwise falls back to the private IP address
+
+This allows you to control whether Ansible connects to instances via their public or private IP addresses, which is important for different network configurations:
+
+- **Private IP (default)**: Recommended for instances in private subnets or when connecting from within the VPC
+- **Public IP**: Useful when connecting from outside the VPC or for instances in public subnets
+
+Example with public IP preference:
+
+```hcl
+module "swarm_cluster" {
+  # ... other configuration ...
+  ansible_host_use_private_ip = false
+}
 ```
 
 ## Instance Naming Convention

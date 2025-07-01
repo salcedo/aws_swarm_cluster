@@ -21,6 +21,12 @@ variable "vpc_id" {
   type        = string
 }
 
+variable "ansible_host_use_private_ip" {
+  description = "Use private IP addresses for Ansible host configuration"
+  type        = bool
+  default     = true
+}
+
 variable "manager_pool" {
   description = "Manager pool configuration"
   type = object({
