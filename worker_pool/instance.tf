@@ -26,7 +26,8 @@ resource "aws_instance" "worker" {
   subnet_id = var.subnet_map[var.availability_zones[count.index % length(var.availability_zones)]]
 
   tags = merge(var.tags, {
-    Name = "${var.cluster_name}-${var.environment}-wkr-${var.name}-${var.availability_zones[count.index % length(var.availability_zones)]}${count.index + 1}"
+    Name             = "${var.cluster_name}-${var.environment}-wkr-${var.name}-${var.availability_zones[count.index % length(var.availability_zones)]}${count.index + 1}"
+    AvailabilityZone = "${var.region}${var.availability_zones[count.index % length(var.availability_zones)]}"
   })
 
   user_data = <<-EOF
