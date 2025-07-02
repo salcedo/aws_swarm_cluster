@@ -22,3 +22,13 @@ output "instance_names" {
   description = "Manager instance names"
   value       = aws_instance.manager[*].tags.Name
 }
+
+output "placement_group_id" {
+  description = "Manager placement group ID"
+  value       = aws_placement_group.manager.id
+}
+
+output "placement_group_name" {
+  description = "Manager placement group name"
+  value       = aws_placement_group.manager.name
+}

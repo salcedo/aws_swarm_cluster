@@ -22,3 +22,13 @@ output "instance_names" {
   description = "Worker instance names"
   value       = aws_instance.worker[*].tags.Name
 }
+
+output "placement_group_id" {
+  description = "Worker placement group ID"
+  value       = aws_placement_group.worker.id
+}
+
+output "placement_group_name" {
+  description = "Worker placement group name"
+  value       = aws_placement_group.worker.name
+}

@@ -77,3 +77,21 @@ output "all_worker_instances" {
     }
   }
 }
+
+output "manager_placement_group" {
+  description = "Manager placement group information"
+  value = {
+    id   = module.manager.placement_group_id
+    name = module.manager.placement_group_name
+  }
+}
+
+output "worker_placement_groups" {
+  description = "Worker placement group information by pool"
+  value = {
+    for pool_name, pool in module.worker_pools : pool_name => {
+      id   = pool.placement_group_id
+      name = pool.placement_group_name
+    }
+  }
+}

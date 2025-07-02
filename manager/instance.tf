@@ -1,3 +1,11 @@
+resource "aws_placement_group" "manager" {
+  name     = "${var.cluster_name}-${var.environment}-manager-pg"
+  strategy = "spread"
+  tags = merge(var.tags, {
+    Name = "${var.cluster_name}-${var.environment}-manager-pg"
+  })
+}
+
 resource "aws_instance" "manager" {
   count = var.manager_count
 
@@ -10,6 +18,8 @@ resource "aws_instance" "manager" {
   instance_type = var.instance_type
   key_name      = var.key_name
 
+  placement_group = aws_placement_group.manager.id
+
   metadata_options {
     http_tokens = "required"
   }
@@ -17,7 +27,8 @@ resource "aws_instance" "manager" {
   root_block_device {
     encrypted = true
     tags = merge(var.tags, {
-      Instance = "${var.cluster_name}-${var.environment}-mgr-${var.availability_zones[count.index % length(var.availability_zones)]}${count.index + 1}"
+      Instance         = "${var.cluster_name}-${var.environment}-mgr-${var.availability_zones[count.index % length(var.availability_zones)]}${count.index + 1}"
+      AvailabilityZone = "${var.region}${var.availability_zones[count.index % length(var.availability_zones)]}"
     })
     volume_size = var.root_volume_size
     volume_type = "gp3"
