@@ -63,6 +63,22 @@ variable "name" {
   }
 }
 
+variable "type" {
+  description = "The type of this worker pool"
+  type        = string
+  default     = "compute"
+
+  validation {
+    condition     = length(var.name) > 0 && length(var.name) <= 50
+    error_message = "Worker pool type must be between 1 and 50 characters long."
+  }
+
+  validation {
+    condition     = can(regex("^[a-zA-Z0-9][a-zA-Z0-9-_]*[a-zA-Z0-9]$", var.name))
+    error_message = "Worker pool type must start and end with alphanumeric characters and can only contain letters, numbers, hyphens, and underscores."
+  }
+}
+
 variable "worker_count" {
   description = "Number of cluster worker instance(s)"
   type        = number

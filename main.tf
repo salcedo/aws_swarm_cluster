@@ -65,6 +65,7 @@ module "worker_pools" {
   tags = each.value.tags != null ? each.value.tags : {
     SwarmRole  = "worker"
     WorkerPool = each.value.name
+    WorkerType = each.value.type
   }
   user_data              = var.manager_pool.user_data != null ? var.manager_pool.user_data : ""
   vpc_security_group_ids = each.value.vpc_security_group_ids
