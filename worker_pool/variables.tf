@@ -63,18 +63,18 @@ variable "name" {
   }
 }
 
-variable "type" {
+variable "worker_type" {
   description = "The type of this worker pool"
   type        = string
   default     = "compute"
 
   validation {
-    condition     = length(var.type) > 0 && length(var.type) <= 50
+    condition     = length(var.worker_type) > 0 && length(var.worker_type) <= 50
     error_message = "Worker pool type must be between 1 and 50 characters long."
   }
 
   validation {
-    condition     = can(regex("^[a-zA-Z0-9][a-zA-Z0-9-_]*[a-zA-Z0-9]$", var.type))
+    condition     = can(regex("^[a-zA-Z0-9][a-zA-Z0-9-_]*[a-zA-Z0-9]$", var.worker_type))
     error_message = "Worker pool type must start and end with alphanumeric characters and can only contain letters, numbers, hyphens, and underscores."
   }
 }
