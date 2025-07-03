@@ -63,7 +63,7 @@ variable "worker_pools" {
   description = "Map of worker pools to create"
   type = map(object({
     name                        = string
-    type                        = optional(string)
+    worker_type                 = optional(string)
     worker_count                = number
     ami                         = string
     associate_public_ip_address = optional(bool)
@@ -80,7 +80,7 @@ variable "worker_pools" {
   default = {
     "default" = {
       name                        = "default"
-      type                        = "compute"
+      worker_type                 = "compute"
       worker_count                = 1
       ami                         = ""
       associate_public_ip_address = false

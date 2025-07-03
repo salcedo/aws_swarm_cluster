@@ -66,10 +66,10 @@ module "worker_pools" {
   tags = each.value.tags != null ? merge(each.value.tags, {
     SwarmRole  = "worker"
     WorkerPool = each.value.name
-    WorkerType = each.value.worker_type }) : {
+    WorkerType = (each.value.worker_type != null ? each.value.worker_type : "compute") }) : {
     SwarmRole  = "worker"
     WorkerPool = each.value.name
-    WorkerType = each.value.worker_type
+    WorkerType = (each.value.worker_type != null ? each.value.worker_type : "compute")
   }
   user_data              = var.manager_pool.user_data != null ? var.manager_pool.user_data : ""
   vpc_security_group_ids = each.value.vpc_security_group_ids
