@@ -1,8 +1,8 @@
 resource "aws_placement_group" "worker" {
-  name     = "${var.cluster_name}-${var.environment}-wkr-${var.name}-pg"
+  name     = "${var.cluster_name}-${var.environment}-wkr-${var.name}"
   strategy = "spread"
   tags = merge(var.tags, {
-    Name = "${var.cluster_name}-${var.environment}-wkr-${var.name}-pg"
+    Name = "${var.cluster_name}-${var.environment}-wkr-${var.name}"
   })
 }
 
