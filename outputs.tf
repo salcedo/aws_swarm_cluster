@@ -2,10 +2,11 @@ locals {
   all_workers = flatten([
     for pool_name, pool in module.worker_pools : [
       for idx, instance in pool.instances : {
-        name       = instance.tags.Name
-        private_ip = instance.private_ip
-        public_ip  = instance.public_ip
-        pool_name  = pool_name
+        name        = instance.tags.Name
+        private_ip  = instance.private_ip
+        public_ip   = instance.public_ip
+        pool_name   = pool_name
+        worker_type = pool.worker_type
       }
     ]
   ])
@@ -34,6 +35,7 @@ output "ansible_inventory_yaml" {
               private_ip              = worker.private_ip
               public_ip               = worker.public_ip
               worker_pool             = worker.pool_name
+              worker_type             = worker.worker_type
             }
           }
         }
