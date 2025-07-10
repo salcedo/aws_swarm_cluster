@@ -32,3 +32,8 @@ output "placement_group_name" {
   description = "Worker placement group name"
   value       = aws_placement_group.worker.name
 }
+
+output "worker_type" {
+  description = "Worker type for this pool"
+  value       = var.worker_type
+}

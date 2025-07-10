@@ -55,6 +55,7 @@ module "worker_pools" {
   worker_count = each.value.worker_count
 
   name                        = each.value.name
+  worker_type                 = each.value.worker_type != null ? each.value.worker_type : "compute"
   ami                         = each.value.ami
   associate_public_ip_address = each.value.associate_public_ip_address != null ? each.value.associate_public_ip_address : false
   availability_zones          = each.value.availability_zones
