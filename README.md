@@ -47,6 +47,7 @@ module "swarm_cluster" {
   worker_pools = {
     "web" = {
       name                        = "web"
+      worker_type                 = "web-server"
       worker_count                = 3
       ami                         = "ami-0c02fb55956c7d316"
       instance_type               = "t3a.large"
@@ -58,6 +59,7 @@ module "swarm_cluster" {
     }
     "api" = {
       name                        = "api"
+      worker_type                 = "api-server"
       worker_count                = 2
       ami                         = "ami-0c02fb55956c7d316"
       instance_type               = "c5.xlarge"
@@ -124,6 +126,7 @@ module "swarm_cluster" {
   worker_pools = {
     "compute" = {
       name                        = "compute"
+      worker_type                 = "compute-intensive"
       worker_count                = 5
       ami                         = "ami-0c02fb55956c7d316"
       instance_type               = "c5.2xlarge"
@@ -185,19 +188,47 @@ module "swarm_cluster" {
 
 Each worker pool in the `worker_pools` map supports the same configuration options as the manager pool, plus:
 
-| Name           | Description                             | Type     | Default  |
-| -------------- | --------------------------------------- | -------- | -------- |
-| `name`         | Name of the worker pool                 | `string` | Required |
-| `worker_count` | Number of worker instances in this pool | `number` | `1`      |
+| Name           | Description                             | Type     | Default     |
+| -------------- | --------------------------------------- | -------- | ----------- |
+| `name`         | Name of the worker pool                 | `string` | Required    |
+| `worker_type`  | Type/category of the worker pool        | `string` | `"compute"` |
+| `worker_count` | Number of worker instances in this pool | `number` | `1`         |
+
+#### Default Worker Pool
+
+If no `worker_pools` are specified, the module creates a default worker pool with the following configuration:
+
+```hcl
+worker_pools = {
+  "default" = {
+    name                        = "default"
+    worker_type                 = "compute"
+    worker_count                = 1
+    ami                         = ""
+    associate_public_ip_address = false
+    availability_zones          = ["a"]
+    disable_api_stop            = true
+    disable_api_termination     = true
+    instance_type               = "t3a.small"
+    key_name                    = ""
+    root_volume_size            = 30
+    tags                        = {}
+    user_data                   = ""
+    vpc_security_group_ids      = []
+  }
+}
+```
 
 ## Outputs
 
-| Name                     | Description                                 |
-| ------------------------ | ------------------------------------------- |
-| `ansible_inventory_yaml` | Complete Ansible inventory in YAML format   |
-| `manager_instances`      | Manager instance information                |
-| `worker_instances`       | Worker instance information grouped by pool |
-| `all_worker_instances`   | All worker instances combined               |
+| Name                      | Description                                 |
+| ------------------------- | ------------------------------------------- |
+| `ansible_inventory_yaml`  | Complete Ansible inventory in YAML format   |
+| `manager_instances`       | Manager instance information                |
+| `worker_instances`        | Worker instance information grouped by pool |
+| `all_worker_instances`    | All worker instances combined               |
+| `manager_placement_group` | Manager placement group information         |
+| `worker_placement_groups` | Worker placement group information by pool  |
 
 ### Ansible Inventory Output
 
@@ -221,6 +252,7 @@ all:
           private_ip: "10.0.1.11"
           public_ip: "1.2.3.5"
           worker_pool: "web"
+          worker_type: "web-server"
 ```
 
 #### Ansible Host IP Selection
@@ -305,11 +337,14 @@ Examples:
 
 The module includes extensive validation for:
 
-- Manager count (must be 1, 3, 5, or 7)
-- AMI ID format
-- Instance type format
-- Availability zone format
-- Cluster and environment naming conventions
+- **Manager count**: Must be 1, 3, 5, or 7 (Docker Swarm raft consensus requirements)
+- **AMI ID format**: Must match pattern `ami-xxxxxxxx` or `ami-xxxxxxxxxxxxxxxxx`
+- **Instance type format**: Must be valid AWS instance type (e.g., `t3a.small`, `m5.large`)
+- **Availability zone format**: Must end with a letter (e.g., `a`, `b`, `c`)
+- **Cluster and environment naming**: Must be alphanumeric with hyphens/underscores, 1-63 characters for cluster name, 1-50 for environment
+- **Key name**: Must be 1-255 characters, alphanumeric with periods, underscores, and hyphens
+- **Root volume size**: Must be between 8 and 16384 GiB
+- **Worker count**: Must be between 0 and 1000 instances per pool
 
 ## Contributing
 
