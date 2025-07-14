@@ -39,6 +39,8 @@ resource "aws_instance" "manager" {
   tags = merge(var.tags, {
     Name             = "${var.cluster_name}-${var.environment}-mgr-${var.availability_zones[count.index % length(var.availability_zones)]}${count.index + 1}"
     AvailabilityZone = "${var.region}${var.availability_zones[count.index % length(var.availability_zones)]}"
+    SwarmRole        = "manager"
+    InstanceType     = var.instance_type
   })
 
   user_data = <<-EOF
