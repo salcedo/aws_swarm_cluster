@@ -29,7 +29,6 @@ resource "aws_instance" "worker" {
     tags = merge(var.tags, {
       Instance         = "${var.cluster_name}-${var.environment}-wkr-${var.name}-${var.availability_zones[count.index % length(var.availability_zones)]}${count.index + 1}"
       AvailabilityZone = "${var.region}${var.availability_zones[count.index % length(var.availability_zones)]}"
-      InstanceType     = var.instance_type
     })
     volume_size = var.root_volume_size
     volume_type = "gp3"
@@ -40,7 +39,6 @@ resource "aws_instance" "worker" {
   tags = merge(var.tags, {
     Name             = "${var.cluster_name}-${var.environment}-wkr-${var.name}-${var.availability_zones[count.index % length(var.availability_zones)]}${count.index + 1}"
     AvailabilityZone = "${var.region}${var.availability_zones[count.index % length(var.availability_zones)]}"
-    InstanceType     = var.instance_type
   })
 
   user_data = <<-EOF

@@ -37,7 +37,8 @@ module "manager" {
   root_volume_size            = var.manager_pool.root_volume_size
   tags = var.manager_pool != null ? merge(var.manager_pool.tags, {
     SwarmRole = "manager" }) : {
-    SwarmRole = "manager"
+    SwarmRole    = "manager"
+    InstanceType = var.manager_pool.instance_type
   }
   user_data              = var.manager_pool.user_data != null ? var.manager_pool.user_data : ""
   vpc_security_group_ids = var.manager_pool.vpc_security_group_ids
@@ -67,11 +68,13 @@ module "worker_pools" {
   tags = each.value.tags != null ? merge(each.value.tags, {
     SwarmRole  = "worker"
     WorkerPool = each.value.name
-    WorkerType = (each.value.worker_type != null ? each.value.worker_type : "compute") }) : {
-    SwarmRole  = "worker"
-    WorkerPool = each.value.name
     WorkerType = (each.value.worker_type != null ? each.value.worker_type : "compute")
+    InstanceType = each.value.instance_type }) : {
+    SwarmRole    = "worker"
+    WorkerPool   = each.value.name
+    WorkerType   = (each.value.worker_type != null ? each.value.worker_type : "compute")
+    InstanceType = each.value.instance_type
   }
-  user_data              = var.manager_pool.user_data != null ? var.manager_pool.user_data : ""
+  user_data              = each.value.user_data != null ? each.value.user_data : ""
   vpc_security_group_ids = each.value.vpc_security_group_ids
 }
