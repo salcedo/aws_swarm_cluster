@@ -20,10 +20,6 @@ resource "aws_instance" "worker" {
 
   placement_group = aws_placement_group.worker.id
 
-  metadata_options {
-    http_tokens = "required"
-  }
-
   root_block_device {
     encrypted = true
     tags = merge(var.tags, {

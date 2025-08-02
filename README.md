@@ -6,7 +6,7 @@ A Terraform module for deploying Docker Swarm clusters on AWS EC2 instances with
 
 - **High Availability**: Deploy Docker Swarm managers across multiple availability zones
 - **Flexible Worker Pools**: Create multiple worker pools with different configurations
-- **Security**: Encrypted EBS volumes, IMDSv2 enforcement, and configurable security groups
+- **Security**: Encrypted EBS volumes and configurable security groups
 - **Ansible Integration**: Automatic generation of Ansible inventory for cluster management
 - **Instance Protection**: Configurable API stop and termination protection
 - **Custom User Data**: Support for custom initialization scripts
@@ -291,7 +291,6 @@ Examples:
 ## Security Features
 
 - **Encrypted Storage**: All EBS root volumes are encrypted
-- **IMDSv2**: Instance Metadata Service v2 is enforced (http_tokens = "required")
 - **Security Groups**: Configurable security groups for managers and worker pools
 - **Instance Protection**: Optional API stop and termination protection
 - **Network Isolation**: Support for private subnets with no public IP assignment
